@@ -1,11 +1,15 @@
 package cs1302.omega;
 
 import javafx.application.Application;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -15,6 +19,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * REPLACE WITH NON-SHOUTING DESCRIPTION OF YOUR APP.
@@ -22,6 +27,7 @@ import javafx.stage.Stage;
 public class OmegaApp extends Application {
 
     private HBox introRow;
+    private HBox timeRow;
     private HBox gameRow1;
     private HBox gameRow2;
     private HBox gameRow3;
@@ -33,7 +39,12 @@ public class OmegaApp extends Application {
     private Button button5;
     private Button button6;
     private Button button7;
-
+    private int score;
+    private Text scoreboard;
+    private int time;
+    private Label timer;
+    private KeyFrame keyFrame;
+    private Timeline timeline;
 
     /**
      * Constructs an {@code OmegaApp} object. This default (i.e., no argument)
@@ -45,10 +56,11 @@ public class OmegaApp extends Application {
     public void init() {
         VBox root = new VBox(30);
         introRow = initFirstRow(introRow);
+        timeRow = initTimerRow(timeRow);
         gameRow1 = initSecondRow(gameRow1);
         gameRow2 = initThirdRow(gameRow2);
         gameRow3 = initFourthRow(gameRow3);
-        root.getChildren().addAll(introRow, gameRow1, gameRow2, gameRow3);
+        root.getChildren().addAll(introRow, timeRow, gameRow1, gameRow2, gameRow3);
         scene = new Scene(root);
     } // init
 
@@ -60,6 +72,7 @@ public class OmegaApp extends Application {
         Image bannerImage = new Image("file:resources/readme-banner.png");
 
         // setup stage
+        startTimer();
         stage.setTitle("Whac-A-Mole");
         stage.setScene(scene);
         stage.setOnCloseRequest(event -> Platform.exit());
@@ -79,6 +92,22 @@ public class OmegaApp extends Application {
         hbox.getChildren().add(title);
         return hbox;
     } // initFirstRow
+
+    /**
+     * Initializing the row for the timer.
+     * @param hbox the hbox for the timer
+     */
+    private HBox initTimerRow(HBox hbox) {
+        hbox = new HBox(300);
+        score = 0;
+        scoreboard = new Text("Score: " + score);
+        scoreboard.setFont(Font.font("Verdana", 30));
+        time = 60;
+        timer = new Label("Time: " + time);
+        timer.setFont(Font.font("Verdana", 30));
+        hbox.getChildren().addAll(scoreboard, timer);
+        return hbox;
+    } // initTimerRow
 
     /**
      * Initializing the second hbox, which is the game's first row.
@@ -112,6 +141,7 @@ public class OmegaApp extends Application {
         button5 = new Button("5");
         button5.setPrefHeight(100);
         button5.setPrefWidth(100);
+        hbox.setAlignment(Pos.CENTER);
         hbox.getChildren().addAll(button3, button4, button5);
         return hbox;
     } // initSecondRow
@@ -132,5 +162,20 @@ public class OmegaApp extends Application {
         hbox.getChildren().addAll(button6, button7);
         return hbox;
     } // initSecondRow
+
+    /**
+     * Start the timer of the game, which is 60 seconds.
+     */
+    private void startTimer() {
+        EventHandler<ActionEvent> handler = (event) -> {
+            time--;
+            timer.setText("Time: " + time);
+        };
+        keyFrame = new KeyFrame(Duration.seconds(1), handler);
+        timeline = new Timeline();
+        timeline.setCycleCount(60);
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.play();
+    } // void
 
 } // OmegaApp
