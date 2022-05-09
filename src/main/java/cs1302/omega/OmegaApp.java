@@ -1,5 +1,8 @@
 package cs1302.omega;
 
+import java.lang.Runnable;
+import java.util.LinkedList;
+import java.util.Random;
 import javafx.application.Application;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -26,6 +29,7 @@ import javafx.util.Duration;
  */
 public class OmegaApp extends Application {
 
+    private VBox root;
     private HBox introRow;
     private HBox timeRow;
     private HBox gameRow1;
@@ -39,12 +43,15 @@ public class OmegaApp extends Application {
     private Button button5;
     private Button button6;
     private Button button7;
+    private LinkedList<Button> buttons;
     private int score;
     private Text scoreboard;
     private int time;
     private Label timer;
     private KeyFrame keyFrame;
     private Timeline timeline;
+    private Timeline buttonTimeline;
+
 
     /**
      * Constructs an {@code OmegaApp} object. This default (i.e., no argument)
@@ -54,7 +61,21 @@ public class OmegaApp extends Application {
 
     @Override
     public void init() {
-        VBox root = new VBox(30);
+        buttons = new LinkedList<>();
+        buttonTimeline = new Timeline();
+        startButtonTimer();
+        for (int i = 1; i <= 7; i++) {
+            buttons.add(new Button());
+        } // for
+        for (int i = 0; i < buttons.size(); i++) {
+            final Button tempButton = buttons.get(i);
+            buttons.get(i).setOnAction((event) -> {
+                score++;
+                scoreboard.setText("Score: " + score);
+                resetButton(tempButton);
+            });
+        } // for
+        root = new VBox(30);
         introRow = initFirstRow(introRow);
         timeRow = initTimerRow(timeRow);
         gameRow1 = initSecondRow(gameRow1);
@@ -73,6 +94,9 @@ public class OmegaApp extends Application {
 
         // setup stage
         startTimer();
+        //Runnable task = () -> startButtonTimer();
+        //Platform.runLater(task);
+        buttonTimeline.play();
         stage.setTitle("Whac-A-Mole");
         stage.setScene(scene);
         stage.setOnCloseRequest(event -> Platform.exit());
@@ -115,14 +139,12 @@ public class OmegaApp extends Application {
      */
     private HBox initSecondRow(HBox hbox) {
         hbox = new HBox(100);
-        button1 = new Button("1");
-        button1.setPrefHeight(100);
-        button1.setPrefWidth(100);
-        button2 = new Button("2");
-        button2.setPrefHeight(100);
-        button2.setPrefWidth(100);
+        buttons.get(0).setPrefHeight(100);
+        buttons.get(0).setPrefWidth(100);
+        buttons.get(1).setPrefHeight(100);
+        buttons.get(1).setPrefWidth(100);
         hbox.setAlignment(Pos.CENTER);
-        hbox.getChildren().addAll(button1, button2);
+        hbox.getChildren().addAll(buttons.get(0), buttons.get(1));
         return hbox;
     } // initSecondRow
 
@@ -132,17 +154,14 @@ public class OmegaApp extends Application {
      */
     private HBox initThirdRow(HBox hbox) {
         hbox = new HBox(60);
-        button3 = new Button("3");
-        button3.setPrefHeight(100);
-        button3.setPrefWidth(100);
-        button4 = new Button("4");
-        button4.setPrefHeight(100);
-        button4.setPrefWidth(100);
-        button5 = new Button("5");
-        button5.setPrefHeight(100);
-        button5.setPrefWidth(100);
+        buttons.get(2).setPrefHeight(100);
+        buttons.get(2).setPrefWidth(100);
+        buttons.get(3).setPrefHeight(100);
+        buttons.get(3).setPrefWidth(100);
+        buttons.get(4).setPrefHeight(100);
+        buttons.get(4).setPrefWidth(100);
         hbox.setAlignment(Pos.CENTER);
-        hbox.getChildren().addAll(button3, button4, button5);
+        hbox.getChildren().addAll(buttons.get(2), buttons.get(3), buttons.get(4));
         return hbox;
     } // initSecondRow
 
@@ -152,14 +171,12 @@ public class OmegaApp extends Application {
      */
     private HBox initFourthRow(HBox hbox) {
         hbox = new HBox(100);
-        button6 = new Button("6");
-        button6.setPrefHeight(100);
-        button6.setPrefWidth(100);
-        button7 = new Button("7");
-        button7.setPrefHeight(100);
-        button7.setPrefWidth(100);
+        buttons.get(5).setPrefHeight(100);
+        buttons.get(5).setPrefWidth(100);
+        buttons.get(6).setPrefHeight(100);
+        buttons.get(6).setPrefWidth(100);
         hbox.setAlignment(Pos.CENTER);
-        hbox.getChildren().addAll(button6, button7);
+        hbox.getChildren().addAll(buttons.get(5), buttons.get(6));
         return hbox;
     } // initSecondRow
 
@@ -178,4 +195,22 @@ public class OmegaApp extends Application {
         timeline.play();
     } // void
 
+    private void startButtonTimer() {
+        Random rand = new Random();
+        EventHandler<ActionEvent> handle = (buttonEvent) -> {
+            int buttonNum = rand.nextInt(7);
+            Image image = new Image("file:resources/mole.png");
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(70);
+            imageView.setFitWidth(70);
+            buttons.get(buttonNum).setGraphic(imageView);
+        };
+        KeyFrame buttonFrame = new KeyFrame(Duration.seconds(1), handle);
+        buttonTimeline.setCycleCount(Timeline.INDEFINITE);
+        buttonTimeline.getKeyFrames().add(buttonFrame);
+    } // startButtonTimer
+
+    private void resetButton(final Button button) {
+        button.setStyle("-fx-background-color: #0090B0");
+    } // resetButton
 } // OmegaApp
