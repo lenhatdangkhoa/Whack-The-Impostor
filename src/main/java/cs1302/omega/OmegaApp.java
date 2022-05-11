@@ -1,7 +1,7 @@
 package cs1302.omega;
 
 import java.lang.Runnable;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Random;
 import javafx.application.Application;
 import javafx.animation.KeyFrame;
@@ -36,14 +36,8 @@ public class OmegaApp extends Application {
     private HBox gameRow2;
     private HBox gameRow3;
     private Scene scene;
-    private Button button1;
-    private Button button2;
-    private Button button3;
-    private Button button4;
-    private Button button5;
-    private Button button6;
-    private Button button7;
-    private LinkedList<Button> buttons;
+    private Button[] buttons;
+    private boolean[] buttonBool;
     private int score;
     private Text scoreboard;
     private int time;
@@ -51,7 +45,10 @@ public class OmegaApp extends Application {
     private KeyFrame keyFrame;
     private Timeline timeline;
     private Timeline buttonTimeline;
-
+    //private Image img = new Image("file:resources/hole.png");
+    //private ImageView defaultImages = new ImageView(img);
+    private Stage stages;
+    private Scene endScene;
 
     /**
      * Constructs an {@code OmegaApp} object. This default (i.e., no argument)
@@ -61,19 +58,43 @@ public class OmegaApp extends Application {
 
     @Override
     public void init() {
-        buttons = new LinkedList<>();
+    } // init
+
+    /** {@inheritDoc} */
+    @Override
+    public void start(Stage stage) {
+        buttons = new Button[7];
+        buttonBool = new boolean[7];
         buttonTimeline = new Timeline();
         startButtonTimer();
-        for (int i = 1; i <= 7; i++) {
-            buttons.add(new Button());
+        for (int i = 0; i < 7; i++) {
+            Image img = new Image("file:resources/hole.png");
+            ImageView defaultImages = new ImageView(img);
+            defaultImages.setFitHeight(70);
+            defaultImages.setFitWidth(70);
+            Button button = new Button();
+            button.setPrefWidth(100);
+            button.setPrefHeight(100);
+            button.setGraphic(defaultImages);
+            buttons[i] = button;
+            buttons[i].setGraphic(defaultImages);
+            buttonBool[i] = false;
         } // for
-        for (int i = 0; i < buttons.size(); i++) {
-            final Button tempButton = buttons.get(i);
-            buttons.get(i).setOnAction((event) -> {
-                score++;
+        Image tempImg = new Image("file:resources/mole.png");
+        ImageView tempImage = new ImageView(tempImg);
+        for (int i = 0; i < buttons.length; i++) {
+            final Button tempButton = buttons[i];
+            final int tempInt = i;
+            buttons[i].setOnAction((event) -> {
+                ImageView tempp = (ImageView) tempButton.getGraphic();
+                if (tempButton == event.getSource() && buttonBool[tempInt] == true) {
+                  score++;
+                  buttonBool[tempInt] = false;
+                } // if
                 scoreboard.setText("Score: " + score);
                 resetButton(tempButton);
             });
+
         } // for
         root = new VBox(30);
         introRow = initFirstRow(introRow);
@@ -82,25 +103,14 @@ public class OmegaApp extends Application {
         gameRow2 = initThirdRow(gameRow2);
         gameRow3 = initFourthRow(gameRow3);
         root.getChildren().addAll(introRow, timeRow, gameRow1, gameRow2, gameRow3);
-        scene = new Scene(root);
-    } // init
-
-    /** {@inheritDoc} */
-    @Override
-    public void start(Stage stage) {
-
-        // demonstrate how to load local asset using "file:resources/"
-        Image bannerImage = new Image("file:resources/readme-banner.png");
-
-        // setup stage
+        scene = new Scene(root, 500, 500);
         startTimer();
-        //Runnable task = () -> startButtonTimer();
-        //Platform.runLater(task);
         buttonTimeline.play();
         stage.setTitle("Whac-A-Mole");
         stage.setScene(scene);
         stage.setOnCloseRequest(event -> Platform.exit());
         stage.sizeToScene();
+        this.stages = stage;
         stage.show();
     } // start
 
@@ -125,11 +135,12 @@ public class OmegaApp extends Application {
         hbox = new HBox(300);
         score = 0;
         scoreboard = new Text("Score: " + score);
-        scoreboard.setFont(Font.font("Verdana", 30));
+        scoreboard.setFont(Font.font("Verdana", 20));
         time = 60;
         timer = new Label("Time: " + time);
-        timer.setFont(Font.font("Verdana", 30));
+        timer.setFont(Font.font("Verdana", 20));
         hbox.getChildren().addAll(scoreboard, timer);
+        hbox.setAlignment(Pos.CENTER);
         return hbox;
     } // initTimerRow
 
@@ -139,12 +150,8 @@ public class OmegaApp extends Application {
      */
     private HBox initSecondRow(HBox hbox) {
         hbox = new HBox(100);
-        buttons.get(0).setPrefHeight(100);
-        buttons.get(0).setPrefWidth(100);
-        buttons.get(1).setPrefHeight(100);
-        buttons.get(1).setPrefWidth(100);
         hbox.setAlignment(Pos.CENTER);
-        hbox.getChildren().addAll(buttons.get(0), buttons.get(1));
+        hbox.getChildren().addAll(buttons[0], buttons[1]);
         return hbox;
     } // initSecondRow
 
@@ -154,14 +161,8 @@ public class OmegaApp extends Application {
      */
     private HBox initThirdRow(HBox hbox) {
         hbox = new HBox(60);
-        buttons.get(2).setPrefHeight(100);
-        buttons.get(2).setPrefWidth(100);
-        buttons.get(3).setPrefHeight(100);
-        buttons.get(3).setPrefWidth(100);
-        buttons.get(4).setPrefHeight(100);
-        buttons.get(4).setPrefWidth(100);
         hbox.setAlignment(Pos.CENTER);
-        hbox.getChildren().addAll(buttons.get(2), buttons.get(3), buttons.get(4));
+        hbox.getChildren().addAll(buttons[2], buttons[3], buttons[4]);
         return hbox;
     } // initSecondRow
 
@@ -171,12 +172,8 @@ public class OmegaApp extends Application {
      */
     private HBox initFourthRow(HBox hbox) {
         hbox = new HBox(100);
-        buttons.get(5).setPrefHeight(100);
-        buttons.get(5).setPrefWidth(100);
-        buttons.get(6).setPrefHeight(100);
-        buttons.get(6).setPrefWidth(100);
         hbox.setAlignment(Pos.CENTER);
-        hbox.getChildren().addAll(buttons.get(5), buttons.get(6));
+        hbox.getChildren().addAll(buttons[5], buttons[6]);
         return hbox;
     } // initSecondRow
 
@@ -187,6 +184,16 @@ public class OmegaApp extends Application {
         EventHandler<ActionEvent> handler = (event) -> {
             time--;
             timer.setText("Time: " + time);
+            if (time == 0) {
+            Text tempText = new Text("Game Over");
+            Button tempButton = new Button("Play Again");
+            tempButton.setOnAction((event1) -> start(stages));
+            HBox tempBox = new HBox(tempText);
+            tempBox.getChildren().add(tempButton);
+            endScene = new Scene(tempBox);
+            stages.setScene(endScene);
+            stages.show();
+            } // if
         };
         keyFrame = new KeyFrame(Duration.seconds(1), handler);
         timeline = new Timeline();
@@ -197,20 +204,25 @@ public class OmegaApp extends Application {
 
     private void startButtonTimer() {
         Random rand = new Random();
+        Image image = new Image("file:resources/mole.png");
         EventHandler<ActionEvent> handle = (buttonEvent) -> {
             int buttonNum = rand.nextInt(7);
-            Image image = new Image("file:resources/mole.png");
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(70);
             imageView.setFitWidth(70);
-            buttons.get(buttonNum).setGraphic(imageView);
+            buttons[buttonNum].setGraphic(imageView);
+            buttonBool[buttonNum] = true;
         };
-        KeyFrame buttonFrame = new KeyFrame(Duration.seconds(1), handle);
+        KeyFrame buttonFrame = new KeyFrame(Duration.millis(1100), handle);
         buttonTimeline.setCycleCount(Timeline.INDEFINITE);
         buttonTimeline.getKeyFrames().add(buttonFrame);
     } // startButtonTimer
 
-    private void resetButton(final Button button) {
-        button.setStyle("-fx-background-color: #0090B0");
+    private void resetButton(Button button) {
+        Image img = new Image("file:resources/hole.png");
+        ImageView defaultImages = new ImageView(img);
+        defaultImages.setFitHeight(70);
+        defaultImages.setFitWidth(70);
+        button.setGraphic(defaultImages);
     } // resetButton
 } // OmegaApp
