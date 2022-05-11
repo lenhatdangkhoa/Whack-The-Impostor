@@ -1,0 +1,106 @@
+cs1302-omega:
+total 20
+-rwxr-xr-x. 1 myid  197 May  2 14:25 compile.sh
+drwxr-xr-x. 2 myid   59 May 11 14:54 meta
+-rw-r--r--. 1 myid 7620 May  2 14:25 pom.xml
+-rwxr-xr-x. 1 myid  105 May  2 14:25 prepare-merge.sh
+-rw-r--r--. 1 myid    0 May 11 14:58 rec29648
+drwxr-xr-x. 2 myid  113 May 11 13:56 resources
+-rwxr-xr-x. 1 myid  271 May  2 14:25 site.sh
+drwxr-xr-x. 4 myid   42 May  2 14:25 src
+drwxr-xr-x. 5 myid   82 May 11 14:47 target
+
+cs1302-omega/meta:
+total 8
+-rw-r--r--. 1 myid 1526 May 11 14:41 ATTRIBUTION.md
+-rw-r--r--. 1 myid  497 May 11 14:54 DEADLINE.md
+
+cs1302-omega/resources:
+total 1428
+-rw-r--r--. 1 myid   77248 May 11 12:57 grass.png
+-rw-r--r--. 1 myid   14755 Dec 28  2020 hole.png
+-rw-r--r--. 1 myid   31591 May 11 13:25 knife.png
+-rw-r--r--. 1 myid   27739 May 11 13:18 mole.png
+-rw-r--r--. 1 myid 1304167 Mar  9 16:35 space.png
+
+cs1302-omega/src:
+total 0
+drwxr-xr-x. 3 myid 26 May  2 14:25 main
+drwxr-xr-x. 3 myid 38 May  2 14:25 site
+
+cs1302-omega/src/main:
+total 0
+drwxr-xr-x. 3 myid 56 May  4 12:30 java
+
+cs1302-omega/src/main/java:
+total 4
+drwxr-xr-x. 3 myid  27 May  4 12:24 cs1302
+-rw-r--r--. 1 myid 376 May  4 12:30 module-info.java
+
+cs1302-omega/src/main/java/cs1302:
+total 0
+drwxr-xr-x. 2 myid 63 May 11 14:47 omega
+
+cs1302-omega/src/main/java/cs1302/omega:
+total 16
+-rw-r--r--. 1 myid 10449 May 11 14:47 OmegaApp.java
+-rw-r--r--. 1 myid  1295 May  2 14:25 OmegaDriver.java
+
+cs1302-omega/src/site:
+total 4
+drwxr-xr-x. 2 myid  25 May  2 14:25 markdown
+-rw-r--r--. 1 myid 424 May  2 14:25 site.xml
+
+cs1302-omega/src/site/markdown:
+total 4
+-rw-r--r--. 1 myid 133 May  2 14:25 index.md.vm
+
+cs1302-omega/target:
+total 0
+drwxr-xr-x. 3 myid 160 May 11 14:47 classes
+drwxr-xr-x. 3 myid  33 May 11 14:47 generated-sources
+drwxr-xr-x. 3 myid  43 May 11 14:47 maven-status
+
+cs1302-omega/target/classes:
+total 1432
+drwxr-xr-x. 3 myid      27 May 11 14:47 cs1302
+-rw-r--r--. 1 myid   77248 May 11 14:47 grass.png
+-rw-r--r--. 1 myid   14755 May 11 14:47 hole.png
+-rw-r--r--. 1 myid   31591 May 11 14:47 knife.png
+-rw-r--r--. 1 myid     355 May 11 14:47 module-info.class
+-rw-r--r--. 1 myid   27739 May 11 14:47 mole.png
+-rw-r--r--. 1 myid 1304167 May 11 14:47 space.png
+
+cs1302-omega/target/classes/cs1302:
+total 0
+drwxr-xr-x. 2 myid 65 May 11 14:47 omega
+
+cs1302-omega/target/classes/cs1302/omega:
+total 16
+-rw-r--r--. 1 myid 10507 May 11 14:47 OmegaApp.class
+-rw-r--r--. 1 myid  1517 May 11 14:47 OmegaDriver.class
+
+cs1302-omega/target/generated-sources:
+total 0
+drwxr-xr-x. 2 myid 6 May 11 14:47 annotations
+
+cs1302-omega/target/generated-sources/annotations:
+total 0
+
+cs1302-omega/target/maven-status:
+total 0
+drwxr-xr-x. 3 myid 29 May 11 14:47 maven-compiler-plugin
+
+cs1302-omega/target/maven-status/maven-compiler-plugin:
+total 0
+drwxr-xr-x. 3 myid 37 May 11 14:47 compile
+
+cs1302-omega/target/maven-status/maven-compiler-plugin/compile:
+total 0
+drwxr-xr-x. 2 myid 52 May 11 14:47 default-compile
+
+cs1302-omega/target/maven-status/maven-compiler-plugin/compile/default-compile:
+total 8
+-rw-r--r--. 1 myid  77 May 11 14:47 createdFiles.lst
+-rw-r--r--. 1 myid 212 May 11 14:47 inputFiles.lst
+/home/myid/kl58277/cs1302-omega:/home/myid/csci-1302
