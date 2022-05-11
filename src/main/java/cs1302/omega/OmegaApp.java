@@ -13,8 +13,14 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.ImageCursor;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -45,10 +51,9 @@ public class OmegaApp extends Application {
     private KeyFrame keyFrame;
     private Timeline timeline;
     private Timeline buttonTimeline;
-    //private Image img = new Image("file:resources/hole.png");
-    //private ImageView defaultImages = new ImageView(img);
     private Stage stages;
     private Scene endScene;
+    private Scene startScene;
 
     /**
      * Constructs an {@code OmegaApp} object. This default (i.e., no argument)
@@ -58,11 +63,6 @@ public class OmegaApp extends Application {
 
     @Override
     public void init() {
-    } // init
-
-    /** {@inheritDoc} */
-    @Override
-    public void start(Stage stage) {
         buttons = new Button[7];
         buttonBool = new boolean[7];
         buttonTimeline = new Timeline();
@@ -78,8 +78,14 @@ public class OmegaApp extends Application {
             button.setGraphic(defaultImages);
             buttons[i] = button;
             buttons[i].setGraphic(defaultImages);
+            buttons[i].setStyle("-fx-background-color: #5928AB;");
             buttonBool[i] = false;
         } // for
+    } // init
+
+    /** {@inheritDoc} */
+    @Override
+    public void start(Stage stage) {
         Image tempImg = new Image("file:resources/mole.png");
         ImageView tempImage = new ImageView(tempImg);
         for (int i = 0; i < buttons.length; i++) {
@@ -88,8 +94,8 @@ public class OmegaApp extends Application {
             buttons[i].setOnAction((event) -> {
                 ImageView tempp = (ImageView) tempButton.getGraphic();
                 if (tempButton == event.getSource() && buttonBool[tempInt] == true) {
-                  score++;
-                  buttonBool[tempInt] = false;
+                    score++;
+                    buttonBool[tempInt] = false;
                 } // if
                 scoreboard.setText("Score: " + score);
                 resetButton(tempButton);
@@ -103,13 +109,24 @@ public class OmegaApp extends Application {
         gameRow2 = initThirdRow(gameRow2);
         gameRow3 = initFourthRow(gameRow3);
         root.getChildren().addAll(introRow, timeRow, gameRow1, gameRow2, gameRow3);
+        BackgroundSize size = new BackgroundSize(
+            1500, 5000, true, true, true, true);
+        BackgroundImage background = new BackgroundImage(
+            new Image("file:resources/space.png"),
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.CENTER,
+            size);
+        root.setBackground(new Background(background));
+
         scene = new Scene(root, 500, 500);
         startTimer();
         buttonTimeline.play();
-        stage.setTitle("Whac-A-Mole");
+        Image cursor = new Image("file:resources/knife.png", 250, 250, false, false);
+        scene.setCursor(new ImageCursor(cursor));
+        stage.setTitle("Whack The Impostor");
         stage.setScene(scene);
         stage.setOnCloseRequest(event -> Platform.exit());
-        stage.sizeToScene();
         this.stages = stage;
         stage.show();
     } // start
@@ -117,11 +134,13 @@ public class OmegaApp extends Application {
     /**
      * Initializing the first row of the game.
      * @param hbox the hbox of the first row
+     * @return hbox the hbox of the first row
      */
     private HBox initFirstRow(HBox hbox) {
         hbox = new HBox();
-        Text title = new Text("Whac-A-Mole");
+        Text title = new Text("Whack The Impostor");
         title.setFont(Font.font("Verdana", 40));
+        title.setFill(Color.RED);
         hbox.setAlignment(Pos.CENTER);
         hbox.getChildren().add(title);
         return hbox;
@@ -130,15 +149,18 @@ public class OmegaApp extends Application {
     /**
      * Initializing the row for the timer.
      * @param hbox the hbox for the timer
+     * @return hbox the hbox for the timer
      */
     private HBox initTimerRow(HBox hbox) {
         hbox = new HBox(300);
         score = 0;
         scoreboard = new Text("Score: " + score);
         scoreboard.setFont(Font.font("Verdana", 20));
+        scoreboard.setFill(Color.WHITE);
         time = 60;
         timer = new Label("Time: " + time);
         timer.setFont(Font.font("Verdana", 20));
+        timer.setTextFill(Color.WHITE);
         hbox.getChildren().addAll(scoreboard, timer);
         hbox.setAlignment(Pos.CENTER);
         return hbox;
@@ -147,6 +169,7 @@ public class OmegaApp extends Application {
     /**
      * Initializing the second hbox, which is the game's first row.
      * @param hbox the hbox of the second row
+     * @return hbox the hbox of the second row
      */
     private HBox initSecondRow(HBox hbox) {
         hbox = new HBox(100);
@@ -158,6 +181,7 @@ public class OmegaApp extends Application {
     /**
      * Initializing the third hbox, which is the game's second row.
      * @param hbox the hbox of the third row
+     * @return hbox the hbox of the third row
      */
     private HBox initThirdRow(HBox hbox) {
         hbox = new HBox(60);
@@ -169,6 +193,7 @@ public class OmegaApp extends Application {
     /**
      * Initializing the fourth hbox, which is the game's third row.
      * @param hbox the hbox of the fourth row
+     * @return hbox the hbox of the fourth row
      */
     private HBox initFourthRow(HBox hbox) {
         hbox = new HBox(100);
@@ -185,14 +210,39 @@ public class OmegaApp extends Application {
             time--;
             timer.setText("Time: " + time);
             if (time == 0) {
-            Text tempText = new Text("Game Over");
-            Button tempButton = new Button("Play Again");
-            tempButton.setOnAction((event1) -> start(stages));
-            HBox tempBox = new HBox(tempText);
-            tempBox.getChildren().add(tempButton);
-            endScene = new Scene(tempBox);
-            stages.setScene(endScene);
-            stages.show();
+                VBox endVBox = new VBox(50);
+                Text tempText = new Text("Game Over");
+                tempText.setFont(Font.font("Verdana", 50));
+                tempText.setFill(Color.RED);
+                String scoreForEndScene = "Your score is " + this.score;
+                Text tempScore = new Text(scoreForEndScene);
+                tempScore.setFont(Font.font("Verdana", 40));
+                tempScore.setFill(Color.YELLOW);
+                Button tempButton = new Button("Play Again");
+                tempButton.setPrefHeight(100);
+                tempButton.setPrefWidth(300);
+                tempButton.setOnAction((event1) -> start(stages));
+                HBox tempBox = new HBox(tempText);
+                tempBox.setAlignment(Pos.CENTER);
+                HBox tempBox2 = new HBox(tempScore);
+                tempBox2.setAlignment(Pos.CENTER);
+                HBox tempBox3 = new HBox(tempButton);
+                tempBox3.setAlignment(Pos.CENTER);
+                endVBox.getChildren().addAll(tempBox, tempBox2, tempBox3);
+                BackgroundSize size = new BackgroundSize(
+                    1500, 1500, true, true, true, false);
+                BackgroundImage background = new BackgroundImage(
+                    new Image("file:resources/grass.png"),
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    size);
+                endVBox.setBackground(new Background(background));
+                endScene = new Scene(endVBox, 750 , 545);
+                Image cursor = new Image("file:resources/knife.png", 100, 100, false, false);
+                endScene.setCursor(new ImageCursor(cursor));
+                stages.setScene(endScene);
+                stages.show();
             } // if
         };
         keyFrame = new KeyFrame(Duration.seconds(1), handler);
@@ -202,6 +252,9 @@ public class OmegaApp extends Application {
         timeline.play();
     } // void
 
+    /**
+     * Start the random images on each button.
+     */
     private void startButtonTimer() {
         Random rand = new Random();
         Image image = new Image("file:resources/mole.png");
@@ -218,6 +271,10 @@ public class OmegaApp extends Application {
         buttonTimeline.getKeyFrames().add(buttonFrame);
     } // startButtonTimer
 
+    /**
+     * Reset the button to the original image after clicked.
+     * @param button the button to be resetted
+     */
     private void resetButton(Button button) {
         Image img = new Image("file:resources/hole.png");
         ImageView defaultImages = new ImageView(img);
